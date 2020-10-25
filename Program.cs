@@ -17,9 +17,6 @@ namespace _02379_SERTECFARMASL_IOSfera
             {
                 Application.EnableVisualStyles();
                 Application.Run(new Form1());
-                //int port = 7070;
-                //AsyncService service = new AsyncService(port);
-                //service.Run();
                 Console.ReadLine();
    
             }

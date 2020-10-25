@@ -25,9 +25,13 @@ namespace _02379_SERTECFARMASL_IOSfera
         private NetworkStream networkStream;
         private StreamWriter writer;
         private StreamReader reader;
-        public AuthTcpClient _authTcpClient;
+        private AuthTcpClient _authTcpClient;
         public ReciveDataTcpClient _reciveDataTcpClient;
 
+
+        public NetworkStream Stream => this.networkStream;
+        public TcpClient Client => this.client;
+        public AuthTcpClient AuthTcpClient => this._authTcpClient;
 
         public AsyncTcpClientService(string host, int port, string warehouse, string workstation)
         {
@@ -137,6 +141,38 @@ namespace _02379_SERTECFARMASL_IOSfera
                 return $"{ex}";
             }
             return "";
+        }
+
+        public static async Task<string> ERecepie(NetworkStream networkStream,  Encoding encoding)
+        {
+            byte[] bytesRequestArray = Enumerable.Empty<byte>().ToArray();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                const int count = 2;
+                int bytesRequestRead = 0;
+                do
+                {
+                    byte[] buf = new byte[count];
+                    try
+                    {
+                        bytesRequestRead = await networkStream.ReadAsync(buf, 0, count);
+                        await memoryStream.WriteAsync(buf, 0, bytesRequestRead);
+                        if(bytesRequestRead <= 1)
+                        {
+                            bytesRequestRead = 0;
+                            buf = new byte[count];
+                            break;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message + e.StackTrace);
+                    }
+                } while (networkStream.CanRead && bytesRequestRead > 0);
+
+                bytesRequestArray = memoryStream.ToArray();
+                return encoding.GetString(bytesRequestArray);
+            }
         }
 
     }

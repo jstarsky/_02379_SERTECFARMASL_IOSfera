@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace _02379_SERTECFARMASL_IOSfera
 {
@@ -29,6 +25,7 @@ namespace _02379_SERTECFARMASL_IOSfera
         }
 
         private AsyncTcpClientService _asyncTcpClientService = null;
+
 
         #region Windows Form Designer generated code
 
@@ -144,7 +141,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                         listBox1.Items.Add("Sent request, waiting for response ...");
                         await authConnetionResponse;
                         listBox1.Items.Add($"Received response: {authConnetionResponse.Result}");
-                        if (!_asyncTcpClientService._authTcpClient.connected)
+                        if (!_asyncTcpClientService.AuthTcpClient.connected)
                         {
                             _asyncTcpClientService.disconnect();
                             _asyncTcpClientService = null;
@@ -152,7 +149,12 @@ namespace _02379_SERTECFARMASL_IOSfera
                         }
                         else
                         {
-                            textBox2.Text = $"{_asyncTcpClientService._authTcpClient.id_socket}";
+                            textBox2.Text = $"{_asyncTcpClientService.AuthTcpClient.id_socket}";
+                            Task<string> _asyncReadLineTcpClientResponse = AsyncTcpClientService.ERecepie(_asyncTcpClientService.Stream, Encoding.GetEncoding(1252));
+                            await _asyncReadLineTcpClientResponse.ContinueWith(_ =>
+                           {
+                               Console.WriteLine(_.Result);
+                           }); ;
                         }
                     }
                 }
@@ -167,6 +169,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                 listBox1.Items.Add(ex.Message);
             }
         }
+
         private void disconnect(object sender, EventArgs e)
         {
             if (this._asyncTcpClientService != null)
