@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Threading;
 
@@ -28,10 +29,8 @@ namespace _02379_SERTECFARMASL_IOSfera
         private StreamReader reader;
         private AuthTcpClient _authTcpClient;
         private ReciveDataTcpClient _reciveDataTcpClient;
-        //private Thread _eRecepieThread;
         private Encoding _encoding;
         private bool _ready;
-
 
         public NetworkStream Stream => this.networkStream;
 
@@ -40,8 +39,6 @@ namespace _02379_SERTECFARMASL_IOSfera
         public AuthTcpClient Auth => this._authTcpClient;
 
         public ReciveDataTcpClient ReciveData => this._reciveDataTcpClient;
-
-        //public Thread ERecepieThread => this._eRecepieThread;
 
         public bool Connected
         {
@@ -68,7 +65,6 @@ namespace _02379_SERTECFARMASL_IOSfera
             this._warehouse = warehouse;
             this._workstation = workstation;
             this._encoding = Encoding.GetEncoding(1252);
-            //this._eRecepieThread = new Thread(this.ERecepie);
             this._ready = false;
         }
 
@@ -114,13 +110,13 @@ namespace _02379_SERTECFARMASL_IOSfera
                     this.writer = new StreamWriter(this.networkStream);
                     this.reader = new StreamReader(this.networkStream);
                     this.writer.AutoFlush = true;
-                    var _connet_json = new
+                    var _request_json = new
                     {
                         warehouse = this._warehouse,
                         workstation = this._workstation,
                     };
-                    string __connet = JsonConvert.SerializeObject(_connet_json);
-                    await this.writer.WriteLineAsync(__connet);
+                    string _request = JsonConvert.SerializeObject(_request_json);
+                    await this.writer.WriteLineAsync(_request);
                     string _response = await this.reader.ReadLineAsync();
                     string response = JObject.Parse(_response).ToString();
                     this._authTcpClient = JsonConvert.DeserializeObject<AuthTcpClient>(response);
@@ -142,8 +138,6 @@ namespace _02379_SERTECFARMASL_IOSfera
         public bool disconnect()
         {
             this._ready = false;
-            //this._eRecepieThread.Abort();
-            //this._eRecepieThread = null;
             this.client.Close();
             return this._ready;
         }
@@ -224,7 +218,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                 {
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        const int count = 1000;
+                        const int count = 500;
                         int bytesRequestRead = 0;
                         do
                         {
@@ -233,22 +227,35 @@ namespace _02379_SERTECFARMASL_IOSfera
                             {
                                 bytesRequestRead = await networkStream.ReadAsync(buf, 0, count);
                                 await memoryStream.WriteAsync(buf, 0, bytesRequestRead);
+                                Console.WriteLine(bytesRequestRead);
+
                                 if (bytesRequestRead <= 1)
                                 {
                                     bytesRequestRead = 0;
                                     buf = new byte[count];
                                     break;
                                 }
+                                //var _request_json = new
+                                //{
+                                //    warehouse = "-----------------",
+                                //    workstation = "-----------------",
+                                //};
+                                //string _request = JsonConvert.SerializeObject(_request_json);
+                                //Console.WriteLine(_request_json);
+                                //await this.writer.WriteLineAsync(_request);
                                 break;
                             }
                             catch (Exception exception)
                             {
-                                Console.WriteLine(exception.Message + exception.StackTrace);
+                                Console.WriteLine($"exception: {exception.Message} {exception.StackTrace}");
                             }
                         } while (networkStream.CanRead && bytesRequestRead > 0);
 
                         bytesRequestArray = memoryStream.ToArray();
-                        Console.WriteLine(this._encoding.GetString(bytesRequestArray));
+                        Console.WriteLine($"Debug: {this._encoding.GetString(bytesRequestArray)}");
+
+
+
                     }
                 }
             });
