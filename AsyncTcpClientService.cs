@@ -14,9 +14,10 @@ namespace _02379_SERTECFARMASL_IOSfera
 {
     class AsyncTcpClientService
     {
-        private int PORT = 7070;
-        private string HOST = "localhost";
-        private string TOKEN;
+        private int PORT;
+        private string HOST;
+        private string _warehouse;
+        private string _workstation;
         private EndPoint localEndPoint;
         private string localAddress;
         private string locaPort;
@@ -28,11 +29,20 @@ namespace _02379_SERTECFARMASL_IOSfera
         public ReciveDataTcpClient _reciveDataTcpClient;
 
 
-        public AsyncTcpClientService(string host, int port, string token)
+        public AsyncTcpClientService(string host, int port, string warehouse, string workstation)
         {
             HOST = host;
             PORT = port;
-            TOKEN = token;
+            _warehouse = warehouse;
+            _workstation = workstation;
+        }
+
+        public AsyncTcpClientService(string warehouse, string workstation)
+        {
+            HOST = "localhost";
+            PORT = 7070;
+            _warehouse = warehouse;
+            _workstation = workstation;
         }
 
         public async Task<string> connet()
@@ -65,12 +75,13 @@ namespace _02379_SERTECFARMASL_IOSfera
                     this.writer = new StreamWriter(this.networkStream);
                     this.reader = new StreamReader(this.networkStream);
                     this.writer.AutoFlush = true;
-                    var _auth_json = new
+                    var _connet_json = new
                     {
-                        token = this.TOKEN,
+                        warehouse = this._warehouse,
+                        workstation = this._workstation,
                     };
-                    string _auth = JsonConvert.SerializeObject(_auth_json);
-                    await this.writer.WriteLineAsync(_auth);
+                    string __connet = JsonConvert.SerializeObject(_connet_json);
+                    await this.writer.WriteLineAsync(__connet);
                     string _response = await this.reader.ReadLineAsync();
                     string response = JObject.Parse(_response).ToString();
                     this._authTcpClient = JsonConvert.DeserializeObject<AuthTcpClient>(response);
@@ -91,7 +102,7 @@ namespace _02379_SERTECFARMASL_IOSfera
         public string disconnect()
         {
             this.client.Close();
-            return _authTcpClient.pharmacy_name;
+            return null;
         }
 
         public string SendData(string data)
@@ -131,14 +142,14 @@ namespace _02379_SERTECFARMASL_IOSfera
     }
     public class AuthTcpClient
     {
-        public string id;
+        public string id_socket;
         public string pharmacy_name;
-        public bool success;
+        public bool connected;
     }
 
     public class ReciveDataTcpClient
     {
-        public bool success;
+        public bool connected;
     }
 
 }

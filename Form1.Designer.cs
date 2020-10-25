@@ -121,24 +121,23 @@ namespace _02379_SERTECFARMASL_IOSfera
         private async void connect(object sender, EventArgs e)
         {
             Console.Write("Array Min and Avg service is now running");
-
+            int PORT = 7070;
+            string HOST = "localhost";
             try
             {
                 if (this._asyncTcpClientService == null)
                 {
-                    string token = "token1";
-                    if (token != "")
+                    string warehouse = "FarmaciaAlmacen_1";
+                    string workstation = "puesto_1";
+                    if (warehouse != "")
                     {
-
-                        int PORT = 7070;
-                        string HOST = "locahost";
-                        listBox1.Items.Add($"Sent request to host{HOST} port {PORT}");
-                        _asyncTcpClientService = new AsyncTcpClientService(HOST, PORT, token);
+                        listBox1.Items.Add($"Sent request to host {HOST} port {PORT}");
+                        _asyncTcpClientService = new AsyncTcpClientService(HOST, PORT, warehouse, workstation);
                         Task<string> authConnetionResponse = _asyncTcpClientService.connet();
                         listBox1.Items.Add("Sent request, waiting for response ...");
                         await authConnetionResponse;
                         listBox1.Items.Add($"Received response: {authConnetionResponse.Result}");
-                        if (!_asyncTcpClientService._authTcpClient.success)
+                        if (!_asyncTcpClientService._authTcpClient.connected)
                         {
                             _asyncTcpClientService.disconnect();
                             _asyncTcpClientService = null;
@@ -146,7 +145,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                         }
                         else
                         {
-                            textBox2.Text = $"id: {_asyncTcpClientService._authTcpClient.id}";
+                            textBox2.Text = $"{_asyncTcpClientService._authTcpClient.id_socket}";
                         }
                     }
                 }

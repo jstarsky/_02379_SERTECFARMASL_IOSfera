@@ -11,3 +11,16 @@ C:\Users\STARSKY-LABEL\stealingfire-win\02379_SERTECFARMASL_IOSfera\obj\Debug\02
 C:\Users\STARSKY-LABEL\stealingfire-win\02379_SERTECFARMASL_IOSfera\bin\Debug\Newtonsoft.Json.dll
 C:\Users\STARSKY-LABEL\stealingfire-win\02379_SERTECFARMASL_IOSfera\bin\Debug\Newtonsoft.Json.xml
 C:\Users\STARSKY-LABEL\stealingfire-win\02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.csproj.CopyComplete
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\bin\Debug\02379_SERTECFARMASL_IOSfera.exe.config
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\bin\Debug\02379_SERTECFARMASL_IOSfera.exe
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\bin\Debug\02379_SERTECFARMASL_IOSfera.pdb
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\bin\Debug\Newtonsoft.Json.dll
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\bin\Debug\Newtonsoft.Json.xml
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.csprojAssemblyReference.cache
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\_02379_SERTECFARMASL_IOSfera.Form1.resources
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\_02379_SERTECFARMASL_IOSfera.Properties.Resources.resources
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.csproj.GenerateResource.cache
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.csproj.CoreCompileInputs.cache
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.csproj.CopyComplete
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.exe
+C:\Users\starsky\stealingfire\_02379_SERTECFARMASL_IOSfera\obj\Debug\02379_SERTECFARMASL_IOSfera.pdb
