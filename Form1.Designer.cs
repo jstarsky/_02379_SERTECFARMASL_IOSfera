@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _02379_SERTECFARMASL_IOSfera
@@ -139,22 +140,23 @@ namespace _02379_SERTECFARMASL_IOSfera
                         _asyncTcpClientService = new AsyncTcpClientService(HOST, PORT, warehouse, workstation);
                         Task<string> authConnetionResponse = _asyncTcpClientService.connet();
                         listBox1.Items.Add("Sent request, waiting for response ...");
-                        await authConnetionResponse;
-                        listBox1.Items.Add($"Received response: {authConnetionResponse.Result}");
-                        if (!_asyncTcpClientService.AuthTcpClient.connected)
+                        await authConnetionResponse.ContinueWith(async (_result) =>
                         {
+                           await _asyncTcpClientService.ERecepie();
+
+                        });
+                        listBox1.Items.Add($"Received response: {authConnetionResponse.Result}");
+
+                        if (!_asyncTcpClientService.Connected && _asyncTcpClientService.Ready)
+                        {
+                            listBox1.Items.Add($"{_asyncTcpClientService.Ready}");
                             _asyncTcpClientService.disconnect();
                             _asyncTcpClientService = null;
                             listBox1.Items.Add("Connection not establish");
                         }
                         else
                         {
-                            textBox2.Text = $"{_asyncTcpClientService.AuthTcpClient.id_socket}";
-                            Task<string> _asyncReadLineTcpClientResponse = AsyncTcpClientService.ERecepie(_asyncTcpClientService.Stream, Encoding.GetEncoding(1252));
-                            await _asyncReadLineTcpClientResponse.ContinueWith(_ =>
-                           {
-                               Console.WriteLine(_.Result);
-                           }); ;
+                            textBox2.Text = $"{_asyncTcpClientService.Auth.id_socket}";
                         }
                     }
                 }
@@ -174,7 +176,9 @@ namespace _02379_SERTECFARMASL_IOSfera
         {
             if (this._asyncTcpClientService != null)
             {
-                listBox1.Items.Add($"Connection close from:  {_asyncTcpClientService.disconnect()}");
+                listBox1.Items.Add($"Connection close from:  {_asyncTcpClientService.Auth.id_socket}");
+                _asyncTcpClientService.disconnect();
+                _asyncTcpClientService = null;
                 _asyncTcpClientService = null;
             }
         }
@@ -184,7 +188,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             if (this._asyncTcpClientService != null)
             {
                 string _responseConnetionResponse = _asyncTcpClientService.SendData(textBox1.Text);
-                listBox1.Items.Add($"Received response: {_asyncTcpClientService.client.Connected} data: {_responseConnetionResponse}");
+                listBox1.Items.Add($"Received response: {_asyncTcpClientService.Connected} data: {_responseConnetionResponse}");
             }
         }
 

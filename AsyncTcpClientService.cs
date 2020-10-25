@@ -9,6 +9,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace _02379_SERTECFARMASL_IOSfera
 {
@@ -18,27 +19,61 @@ namespace _02379_SERTECFARMASL_IOSfera
         private string HOST;
         private string _warehouse;
         private string _workstation;
-        private EndPoint localEndPoint;
-        private string localAddress;
-        private string locaPort;
-        public TcpClient client;
+        //private EndPoint localEndPoint;
+        //private string localAddress;
+        //private string locaPort;
+        private TcpClient client;
         private NetworkStream networkStream;
         private StreamWriter writer;
         private StreamReader reader;
         private AuthTcpClient _authTcpClient;
-        public ReciveDataTcpClient _reciveDataTcpClient;
+        private ReciveDataTcpClient _reciveDataTcpClient;
+        //private Thread _eRecepieThread;
+        private Encoding _encoding;
+        private bool _ready;
 
 
         public NetworkStream Stream => this.networkStream;
+
         public TcpClient Client => this.client;
-        public AuthTcpClient AuthTcpClient => this._authTcpClient;
+
+        public AuthTcpClient Auth => this._authTcpClient;
+
+        public ReciveDataTcpClient ReciveData => this._reciveDataTcpClient;
+
+        //public Thread ERecepieThread => this._eRecepieThread;
+
+        public bool Connected
+        {
+            get
+            {
+                try
+                {
+                    return this.client.Connected;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+        }
+
+
+        public bool Ready => this._ready;
 
         public AsyncTcpClientService(string host, int port, string warehouse, string workstation)
         {
-            HOST = host;
-            PORT = port;
-            _warehouse = warehouse;
-            _workstation = workstation;
+            this.HOST = host;
+            this.PORT = port;
+            this._warehouse = warehouse;
+            this._workstation = workstation;
+            this._encoding = Encoding.GetEncoding(1252);
+            //this._eRecepieThread = new Thread(this.ERecepie);
+            this._ready = false;
+        }
+
+        ~AsyncTcpClientService()
+        {
         }
 
         public AsyncTcpClientService(string warehouse, string workstation)
@@ -89,6 +124,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                     string _response = await this.reader.ReadLineAsync();
                     string response = JObject.Parse(_response).ToString();
                     this._authTcpClient = JsonConvert.DeserializeObject<AuthTcpClient>(response);
+                    this._ready = true;
                     return response;
                 }
             }
@@ -103,10 +139,13 @@ namespace _02379_SERTECFARMASL_IOSfera
             return "";
         }
 
-        public string disconnect()
+        public bool disconnect()
         {
+            this._ready = false;
+            //this._eRecepieThread.Abort();
+            //this._eRecepieThread = null;
             this.client.Close();
-            return null;
+            return this._ready;
         }
 
         public string SendData(string data)
@@ -143,7 +182,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             return "";
         }
 
-        public static async Task<string> ERecepie(NetworkStream networkStream,  Encoding encoding)
+        private static async Task<string> ERecepie(NetworkStream networkStream, Encoding encoding)
         {
             byte[] bytesRequestArray = Enumerable.Empty<byte>().ToArray();
             using (MemoryStream memoryStream = new MemoryStream())
@@ -157,29 +196,71 @@ namespace _02379_SERTECFARMASL_IOSfera
                     {
                         bytesRequestRead = await networkStream.ReadAsync(buf, 0, count);
                         await memoryStream.WriteAsync(buf, 0, bytesRequestRead);
-                        if(bytesRequestRead <= 1)
+                        if (bytesRequestRead <= 1)
                         {
                             bytesRequestRead = 0;
                             buf = new byte[count];
                             break;
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception exception)
                     {
-                        Console.WriteLine(e.Message + e.StackTrace);
+                        Console.WriteLine(exception.Message + exception.StackTrace);
                     }
                 } while (networkStream.CanRead && bytesRequestRead > 0);
 
+                Console.WriteLine(bytesRequestArray);
                 bytesRequestArray = memoryStream.ToArray();
                 return encoding.GetString(bytesRequestArray);
             }
         }
 
+        public async Task ERecepie()
+        {
+            await Task.Run(async () =>
+            {
+                byte[] bytesRequestArray = Enumerable.Empty<byte>().ToArray();
+                while (this.Ready)
+                {
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        const int count = 1000;
+                        int bytesRequestRead = 0;
+                        do
+                        {
+                            byte[] buf = new byte[count];
+                            try
+                            {
+                                bytesRequestRead = await networkStream.ReadAsync(buf, 0, count);
+                                await memoryStream.WriteAsync(buf, 0, bytesRequestRead);
+                                Console.WriteLine(bytesRequestRead);
+
+                                if (bytesRequestRead <= 1)
+                                {
+                                    bytesRequestRead = 0;
+                                    buf = new byte[count];
+                                    break;
+                                }
+                                break;
+                            }
+                            catch (Exception exception)
+                            {
+                                Console.WriteLine(exception.Message + exception.StackTrace);
+                            }
+                        } while (networkStream.CanRead && bytesRequestRead > 0);
+
+                        bytesRequestArray = memoryStream.ToArray();
+                        Console.WriteLine(this._encoding.GetString(bytesRequestArray));
+                    }
+                }
+            });
+        }
     }
+
     public class AuthTcpClient
     {
         public string id_socket;
-        public string pharmacy_name;
+        //public string pharmacy_name;
         public bool connected;
     }
 
@@ -189,3 +270,4 @@ namespace _02379_SERTECFARMASL_IOSfera
     }
 
 }
+
