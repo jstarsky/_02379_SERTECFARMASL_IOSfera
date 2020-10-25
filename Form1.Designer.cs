@@ -48,9 +48,10 @@ namespace _02379_SERTECFARMASL_IOSfera
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(34, 36);
+            this.button1.Location = new System.Drawing.Point(68, 69);
+            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(150, 44);
             this.button1.TabIndex = 0;
             this.button1.Text = "connect";
             this.button1.UseVisualStyleBackColor = true;
@@ -58,24 +59,28 @@ namespace _02379_SERTECFARMASL_IOSfera
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(35, 65);
+            this.textBox1.Location = new System.Drawing.Point(70, 125);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(169, 20);
+            this.textBox1.Size = new System.Drawing.Size(334, 31);
             this.textBox1.TabIndex = 2;
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(34, 101);
+            this.listBox1.ItemHeight = 25;
+            this.listBox1.Location = new System.Drawing.Point(68, 194);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(724, 303);
+            this.listBox1.Size = new System.Drawing.Size(1444, 579);
             this.listBox1.TabIndex = 3;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(129, 36);
+            this.button2.Location = new System.Drawing.Point(258, 69);
+            this.button2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(150, 44);
             this.button2.TabIndex = 4;
             this.button2.Text = "disconnect";
             this.button2.UseVisualStyleBackColor = true;
@@ -83,33 +88,35 @@ namespace _02379_SERTECFARMASL_IOSfera
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(225, 65);
+            this.textBox2.Location = new System.Drawing.Point(450, 125);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(533, 20);
+            this.textBox2.Size = new System.Drawing.Size(1062, 31);
             this.textBox2.TabIndex = 5;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(225, 36);
+            this.button3.Location = new System.Drawing.Point(450, 69);
+            this.button3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.Size = new System.Drawing.Size(150, 44);
             this.button3.TabIndex = 6;
             this.button3.Text = "Send Data";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.sendData);
-
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1600, 865);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
