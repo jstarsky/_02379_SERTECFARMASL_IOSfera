@@ -233,8 +233,6 @@ namespace _02379_SERTECFARMASL_IOSfera
                             {
                                 bytesRequestRead = await networkStream.ReadAsync(buf, 0, count);
                                 await memoryStream.WriteAsync(buf, 0, bytesRequestRead);
-                                Console.WriteLine(bytesRequestRead);
-
                                 if (bytesRequestRead <= 1)
                                 {
                                     bytesRequestRead = 0;
