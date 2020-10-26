@@ -31,6 +31,7 @@ namespace _02379_SERTECFARMASL_IOSfera
         private ReciveDataTcpClient _reciveDataTcpClient;
         private Encoding _encoding;
         private bool _ready;
+        private string _eRecepie = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><env:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><env:Header /><env:Body env:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><m:WS_CCFC_IdentificacioUsuariV2Response xmlns:m=\"http://ccfcserver.farmacat.org/\"><WS_CCFC_IdentificacioUsuariReturn xmlns:n1=\"http://ccfcserver.farmacat.org/schema/\" xsi:type=\"n1:DTOIdentificacioUsuariResponse\"><p_TIPUS_USUARI xsi:type=\"xsd:string\">F</p_TIPUS_USUARI><p_NIF xsi:type=\"xsd:string\">99999995C</p_NIF><p_COD_UP_DIS xsi:type=\"xsd:string\">12821</p_COD_UP_DIS><items_P_INF_EXE soapenc:arrayType=\"n1:DTO_P_INF_EXE[1]\"><DTO_P_INF_EXE xsi:type=\"n1:DTO_P_INF_EXE\"><p_COD_EXE xsi:type=\"xsd:string\">DISCCFC000</p_COD_EXE><p_DES_COD xsi:type=\"xsd:string\">Operació realitzada correctament - MISSATGE IMPORTANT DEL SERVEI: consulti\'l a la WEB de SIFARE, o des del seu PGOF</p_DES_COD><p_EST_EXE xsi:type=\"xsd:string\">0</p_EST_EXE></DTO_P_INF_EXE></items_P_INF_EXE><p_EST_EXE xsi:type=\"xsd:string\">0</p_EST_EXE><items_AVIS_CCFC xsi:nil=\"true\" /></WS_CCFC_IdentificacioUsuariReturn></m:WS_CCFC_IdentificacioUsuariV2Response></env:Body></env:Envelope>";
 
         public NetworkStream Stream => this.networkStream;
 
@@ -228,6 +229,7 @@ namespace _02379_SERTECFARMASL_IOSfera
 
         public async Task ERecepie()
         {
+            string _request;
             await Task.Run(async () =>
             {
                 byte[] bytesRequestArray = Enumerable.Empty<byte>().ToArray();
@@ -242,24 +244,15 @@ namespace _02379_SERTECFARMASL_IOSfera
                             byte[] buf = new byte[count];
                             try
                             {
-                                bytesRequestRead = await networkStream.ReadAsync(buf, 0, count);
+                                bytesRequestRead = await this.networkStream.ReadAsync(buf, 0, count);
                                 await memoryStream.WriteAsync(buf, 0, bytesRequestRead);
-                                Console.WriteLine(bytesRequestRead);
-
-                                if (bytesRequestRead <= 1)
+                                var _response_json = new
                                 {
-                                    bytesRequestRead = 0;
-                                    buf = new byte[count];
-                                    break;
-                                }
-                                //var _request_json = new
-                                //{
-                                //    warehouse = "-----------------",
-                                //    workstation = "-----------------",
-                                //};
-                                //string _request = JsonConvert.SerializeObject(_request_json);
-                                //Console.WriteLine(_request_json);
-                                //await this.writer.WriteLineAsync(_request);
+                                    warehouse = this._warehouse,
+                                    workstation = this._workstation,
+                                    eRecepie = this._eRecepie
+                                };
+                                await this.writer.WriteLineAsync(JsonConvert.SerializeObject(_response_json));
                                 break;
                             }
                             catch (Exception exception)
@@ -269,10 +262,14 @@ namespace _02379_SERTECFARMASL_IOSfera
                         } while (networkStream.CanRead && bytesRequestRead > 0);
 
                         bytesRequestArray = memoryStream.ToArray();
-                        Console.WriteLine($"Debug: {this._encoding.GetString(bytesRequestArray)}");
+                        _request = this._encoding.GetString(bytesRequestArray);
 
-
-
+                        if (_request != "" && bytesRequestRead == 0)
+                        {
+                            Console.WriteLine($"Debug: {_request}");
+                            bytesRequestRead = 0;
+                            _request = "";
+                        }
                     }
                 }
             });
@@ -289,6 +286,5 @@ namespace _02379_SERTECFARMASL_IOSfera
     {
         public bool connected;
     }
-
 }
 
