@@ -36,7 +36,24 @@ namespace _02379_SERTECFARMASL_IOSfera
 
         public TcpClient Client => this.client;
 
-        public AuthTcpClient Auth => this._authTcpClient;
+        public AuthTcpClient Auth
+        {
+            get
+            {
+                try
+                {
+                    if (this._authTcpClient != null)
+                    {
+                        return this._authTcpClient;
+                    }
+                    return new AuthTcpClient();
+                }
+                catch (Exception)
+                {
+                    return new AuthTcpClient();
+                }
+            }
+        }
 
         public ReciveDataTcpClient ReciveData => this._reciveDataTcpClient;
 
@@ -265,7 +282,6 @@ namespace _02379_SERTECFARMASL_IOSfera
     public class AuthTcpClient
     {
         public string id_socket;
-        //public string pharmacy_name;
         public bool connected;
     }
 
