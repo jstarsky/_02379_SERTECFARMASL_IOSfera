@@ -73,7 +73,6 @@ namespace _02379_SERTECFARMASL_IOSfera
             }
         }
 
-
         public bool Ready => this._ready;
 
         public AsyncTcpClientService(string host, int port, string warehouse, string workstation)
@@ -237,7 +236,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                 {
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        const int count = 500;
+                        const int count = 1000;
                         int bytesRequestRead = 0;
                         do
                         {
