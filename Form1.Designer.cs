@@ -135,7 +135,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             {
                 if (this._asyncTcpClientService == null && this.warehouse != "")
                 {
-                    listBox1.Items.Add($"Sent request to ip {this.IP} port {this.PORT} | warehouse {this.warehouse} workstation {this.workstation}");
+                    listBox1.Items.Add($"Sent request to ip {this.IP} port {this.PORT} | Auth data: warehouse {this.warehouse} workstation {this.workstation}");
                     _asyncTcpClientService = new AsyncTcpClientService(this.IP, this.PORT, this.warehouse, this.workstation);
 
                     Task<string> authConnetionResponse = _asyncTcpClientService.ConnectAsync();
