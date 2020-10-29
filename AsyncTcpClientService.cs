@@ -135,7 +135,7 @@ namespace _02379_SERTECFARMASL_IOSfera
 
             try
             {
-                Console.WriteLine($"CONNECTION START");
+                Console.WriteLine($"CONNECTION ASYNC START");
 
                 if (this.client != null)
                 {
@@ -177,9 +177,9 @@ namespace _02379_SERTECFARMASL_IOSfera
                     return response;
                 }
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException ex)
             {
-                Console.WriteLine("ClientConnection: ArgumentNullException: {0}", e);
+                Console.WriteLine($"ClientConnection: ArgumentNullException: {ex}");
             }
             catch (SocketException ex)
             {
@@ -188,7 +188,57 @@ namespace _02379_SERTECFARMASL_IOSfera
             return "";
         }
 
-        public bool disconnect()
+        public bool Connect()
+        {
+
+            try
+            {
+                Console.WriteLine($"CONNECTION START");
+
+                if (this.client != null)
+                {
+                    Console.WriteLine($"CONNECTION ALREADY OPEN");
+                }
+                else
+                {
+                    if (this.HOST != null)
+                    {
+                        this.IP = null;
+                        IPHostEntry ipHostInfo = Dns.GetHostEntry(this.HOST);
+                        for (int i = 0; i < ipHostInfo.AddressList.Length; ++i)
+                        {
+                            if (ipHostInfo.AddressList[i].AddressFamily ==
+                            AddressFamily.InterNetwork)
+                            {
+                                this.IP = ipHostInfo.AddressList[i];
+                                break;
+                            }
+                        }
+                    }
+                    this.client = new TcpClient();
+                    this.client.Connect(this.IP, this.PORT);
+                    this.networkStream = this.client.GetStream();
+                    this.writer = new StreamWriter(this.networkStream);
+                    this.reader = new StreamReader(this.networkStream);
+                    this.writer.AutoFlush = true;
+
+                    this._ready = true;
+                    return this._ready;
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"ClientConnection: ArgumentNullException: {ex}");
+            }
+            catch (SocketException ex)
+            {
+                Console.WriteLine($"ClientConnection: SocketException: {ex}");
+            }
+            this._ready = false;
+            return this._ready;
+        }
+
+        public bool Disconnect()
         {
             this._ready = false;
             try

@@ -27,6 +27,10 @@ namespace _02379_SERTECFARMASL_IOSfera
         }
 
         private AsyncTcpClientService _asyncTcpClientService = null;
+        private string warehouse = "FarmaciaAlmacen_1";
+        private string workstation = "puesto_1";
+        private IPAddress IP = IPAddress.Parse("207.154.200.103");
+        private int PORT = 9090;
 
 
         #region Windows Form Designer generated code
@@ -47,10 +51,10 @@ namespace _02379_SERTECFARMASL_IOSfera
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(68, 69);
-            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button1.Location = new System.Drawing.Point(45, 44);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(150, 44);
+            this.button1.Size = new System.Drawing.Size(100, 28);
             this.button1.TabIndex = 0;
             this.button1.Text = "connect";
             this.button1.UseVisualStyleBackColor = true;
@@ -58,64 +62,64 @@ namespace _02379_SERTECFARMASL_IOSfera
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(70, 125);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBox1.Location = new System.Drawing.Point(47, 80);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(334, 31);
+            this.textBox1.Size = new System.Drawing.Size(224, 22);
             this.textBox1.TabIndex = 2;
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 25;
-            this.listBox1.Location = new System.Drawing.Point(68, 194);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(45, 124);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(4);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(1444, 579);
+            this.listBox1.Size = new System.Drawing.Size(964, 372);
             this.listBox1.TabIndex = 3;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(258, 69);
-            this.button2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button2.Location = new System.Drawing.Point(172, 44);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(150, 44);
+            this.button2.Size = new System.Drawing.Size(100, 28);
             this.button2.TabIndex = 4;
             this.button2.Text = "disconnect";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.disconnect);
+            this.button2.Click += new System.EventHandler(this.Disconnect);
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(450, 125);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBox2.Location = new System.Drawing.Point(300, 80);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(1062, 31);
+            this.textBox2.Size = new System.Drawing.Size(709, 22);
             this.textBox2.TabIndex = 5;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(450, 69);
-            this.button3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button3.Location = new System.Drawing.Point(300, 44);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(150, 44);
+            this.button3.Size = new System.Drawing.Size(100, 28);
             this.button3.TabIndex = 6;
             this.button3.Text = "Send Data";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.sendData);
+            this.button3.Click += new System.EventHandler(this.SendData);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1600, 865);
+            this.ClientSize = new System.Drawing.Size(1067, 554);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -126,40 +130,33 @@ namespace _02379_SERTECFARMASL_IOSfera
 
         private async void ConnectAsync(object sender, EventArgs e)
         {
-            IPAddress IP = IPAddress.Parse("207.154.200.103");
-            int PORT = 9090;
 
             try
             {
-                if (this._asyncTcpClientService == null)
+                if (this._asyncTcpClientService == null && this.warehouse != "")
                 {
-                    string warehouse = "FarmaciaAlmacen_1";
-                    string workstation = "puesto_1";
-                    if (warehouse != "")
+                    listBox1.Items.Add($"Sent request to ip {this.IP} port {this.PORT} | warehouse {this.warehouse} workstation {this.workstation}");
+                    _asyncTcpClientService = new AsyncTcpClientService(this.IP, this.PORT, this.warehouse, this.workstation);
+
+                    Task<string> authConnetionResponse = _asyncTcpClientService.ConnectAsync();
+                    this.listBox1.Items.Add("Sent request, waiting for response ...");
+                    await authConnetionResponse.ContinueWith(async (_result) =>
                     {
-                        listBox1.Items.Add($"Sent request to ip {IP} port {PORT}");
-                        _asyncTcpClientService = new AsyncTcpClientService(IP, PORT, warehouse, workstation);
+                        await _asyncTcpClientService.ERecepie();
 
-                        Task<string> authConnetionResponse = _asyncTcpClientService.ConnectAsync();
-                        this.listBox1.Items.Add("Sent request, waiting for response ...");
-                        await authConnetionResponse.ContinueWith(async (_result) =>
-                        {
-                           await _asyncTcpClientService.ERecepie();
+                    });
+                    this.listBox1.Items.Add($"Received response: {authConnetionResponse.Result}");
 
-                        });
-                        this.listBox1.Items.Add($"Received response: {authConnetionResponse.Result}");
-
-                        if (!_asyncTcpClientService.Connected && _asyncTcpClientService.Ready)
-                        {
-                            this.listBox1.Items.Add($"{_asyncTcpClientService.Ready}");
-                            _asyncTcpClientService.disconnect();
-                            _asyncTcpClientService = null;
-                            this.listBox1.Items.Add("Connection not establish");
-                        }
-                        else
-                        {
-                            textBox2.Text = $"{_asyncTcpClientService.id}";
-                        }
+                    if (!_asyncTcpClientService.Connected && _asyncTcpClientService.Ready)
+                    {
+                        this.listBox1.Items.Add($"{_asyncTcpClientService.Ready}");
+                        _asyncTcpClientService.Disconnect();
+                        _asyncTcpClientService = null;
+                        this.listBox1.Items.Add("Connection not establish");
+                    }
+                    else
+                    {
+                        textBox2.Text = $"{_asyncTcpClientService.id}";
                     }
                 }
                 else
@@ -174,7 +171,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             }
         }
 
-        private void disconnect(object sender, EventArgs e)
+        private void Disconnect(object sender, EventArgs e)
         {
             if (this._asyncTcpClientService != null)
             {
@@ -185,7 +182,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             }
         }
 
-        private void sendData(object sender, EventArgs e)
+        private void SendData(object sender, EventArgs e)
         {
             if (this._asyncTcpClientService != null)
             {
@@ -196,10 +193,10 @@ namespace _02379_SERTECFARMASL_IOSfera
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button3;
         #endregion
 
     }
