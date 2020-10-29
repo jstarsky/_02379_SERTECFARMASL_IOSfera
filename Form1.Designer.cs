@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -126,8 +127,8 @@ namespace _02379_SERTECFARMASL_IOSfera
         private async void connect(object sender, EventArgs e)
         {
             Console.Write("Array Min and Avg service is now running");
-            int PORT = 7070;
-            string HOST = "localhost";
+            int PORT = 9090;
+            IPAddress IP = IPAddress.Parse("207.154.200.103");
             try
             {
                 if (this._asyncTcpClientService == null)
@@ -136,8 +137,8 @@ namespace _02379_SERTECFARMASL_IOSfera
                     string workstation = "puesto_1";
                     if (warehouse != "")
                     {
-                        listBox1.Items.Add($"Sent request to host {HOST} port {PORT}");
-                        _asyncTcpClientService = new AsyncTcpClientService(HOST, PORT, warehouse, workstation);
+                        listBox1.Items.Add($"Sent request to ip {IP} port {PORT}");
+                        _asyncTcpClientService = new AsyncTcpClientService(IP, PORT, warehouse, workstation);
 
                         Task<string> authConnetionResponse = _asyncTcpClientService.connet();
                         this.listBox1.Items.Add("Sent request, waiting for response ...");
@@ -157,7 +158,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                         }
                         else
                         {
-                            textBox2.Text = $"{_asyncTcpClientService.Auth.id_socket}";
+                            textBox2.Text = $"{_asyncTcpClientService.id}";
                         }
                     }
                 }
@@ -177,7 +178,7 @@ namespace _02379_SERTECFARMASL_IOSfera
         {
             if (this._asyncTcpClientService != null)
             {
-                this.listBox1.Items.Add($"Connection close from:  {_asyncTcpClientService.Auth.id_socket}");
+                this.listBox1.Items.Add($"Connection close from:  {_asyncTcpClientService.id}");
                 _asyncTcpClientService.disconnect();
                 _asyncTcpClientService = null;
                 _asyncTcpClientService = null;

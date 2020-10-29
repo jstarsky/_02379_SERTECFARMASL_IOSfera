@@ -16,6 +16,7 @@ namespace _02379_SERTECFARMASL_IOSfera
 {
     class AsyncTcpClientService
     {
+        private IPAddress IP;
         private int PORT;
         private string HOST;
         private string _warehouse;
@@ -43,15 +44,34 @@ namespace _02379_SERTECFARMASL_IOSfera
             {
                 try
                 {
-                    if (this._authTcpClient != null)
-                    {
-                        return this._authTcpClient;
-                    }
-                    return new AuthTcpClient();
+                    return this._authTcpClient;
+
                 }
                 catch (Exception)
                 {
-                    return new AuthTcpClient();
+                    return null;
+                }
+            }
+        }
+
+        public string id
+        {
+            get
+            {
+                try
+                {
+                    if (this._authTcpClient != null)
+                    {
+                        return this._authTcpClient.id_socket;
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                catch (Exception)
+                {
+                    return "";
                 }
             }
         }
@@ -64,7 +84,14 @@ namespace _02379_SERTECFARMASL_IOSfera
             {
                 try
                 {
-                    return this.client.Connected;
+                    if (this.client != null)
+                    {
+                        return this.client.Connected;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 catch (Exception)
                 {
@@ -74,6 +101,9 @@ namespace _02379_SERTECFARMASL_IOSfera
         }
 
         public bool Ready => this._ready;
+
+        public string Host => this.HOST;
+        public int Port => this.PORT;
 
         public AsyncTcpClientService(string host, int port, string warehouse, string workstation)
         {
@@ -85,16 +115,19 @@ namespace _02379_SERTECFARMASL_IOSfera
             this._ready = false;
         }
 
-        ~AsyncTcpClientService()
+        public AsyncTcpClientService(IPAddress ip, int port, string warehouse, string workstation)
         {
+            this.IP = ip;
+            this.HOST = null;
+            this.PORT = port;
+            this._warehouse = warehouse;
+            this._workstation = workstation;
+            this._encoding = Encoding.GetEncoding(1252);
+            this._ready = false;
         }
 
-        public AsyncTcpClientService(string warehouse, string workstation)
+        ~AsyncTcpClientService()
         {
-            HOST = "localhost";
-            PORT = 7070;
-            _warehouse = warehouse;
-            _workstation = workstation;
         }
 
         public async Task<string> connet()
@@ -110,19 +143,22 @@ namespace _02379_SERTECFARMASL_IOSfera
                 }
                 else
                 {
-                    IPAddress ipAddress = null;
-                    IPHostEntry ipHostInfo = Dns.GetHostEntry(this.HOST);
-                    for (int i = 0; i < ipHostInfo.AddressList.Length; ++i)
+                    if (this.HOST != null)
                     {
-                        if (ipHostInfo.AddressList[i].AddressFamily ==
-                        AddressFamily.InterNetwork)
+                        this.IP = null;
+                        IPHostEntry ipHostInfo = Dns.GetHostEntry(this.HOST);
+                        for (int i = 0; i < ipHostInfo.AddressList.Length; ++i)
                         {
-                            ipAddress = ipHostInfo.AddressList[i];
-                            break;
+                            if (ipHostInfo.AddressList[i].AddressFamily ==
+                            AddressFamily.InterNetwork)
+                            {
+                                this.IP = ipHostInfo.AddressList[i];
+                                break;
+                            }
                         }
                     }
                     this.client = new TcpClient();
-                    await this.client.ConnectAsync(ipAddress, PORT);
+                    this.client.Connect(this.IP, this.PORT);
                     this.networkStream = this.client.GetStream();
                     this.writer = new StreamWriter(this.networkStream);
                     this.reader = new StreamReader(this.networkStream);
@@ -155,8 +191,23 @@ namespace _02379_SERTECFARMASL_IOSfera
         public bool disconnect()
         {
             this._ready = false;
-            this.client.Close();
-            return this._ready;
+            try
+            {
+                if (this.client != null)
+                {
+                    this.client.Close();
+                    return this._ready;
+                }
+                else
+                {
+                    return this._ready;
+                }
+            }
+            catch
+            {
+                return this._ready;
+            }
+
         }
 
         public string SendData(string data)
