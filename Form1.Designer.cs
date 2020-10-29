@@ -176,7 +176,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             if (this._asyncTcpClientService != null)
             {
                 this.listBox1.Items.Add($"Connection close from:  {_asyncTcpClientService.id}");
-                _asyncTcpClientService.disconnect();
+                _asyncTcpClientService.Disconnect();
                 _asyncTcpClientService = null;
                 _asyncTcpClientService = null;
             }
