@@ -27,6 +27,7 @@ namespace _02379_SERTECFARMASL_IOSfera
         }
 
         private AsyncTcpClientService _asyncTcpClientService = null;
+
         private string warehouse = "FarmaciaAlmacen_1";
         private string workstation = "puesto_1";
         private IPAddress IP = IPAddress.Parse("207.154.200.103");
