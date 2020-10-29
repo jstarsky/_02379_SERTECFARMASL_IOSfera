@@ -54,7 +54,7 @@ namespace _02379_SERTECFARMASL_IOSfera
             this.button1.TabIndex = 0;
             this.button1.Text = "connect";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.connect);
+            this.button1.Click += new System.EventHandler(this.ConnectAsync);
             // 
             // textBox1
             // 
@@ -124,11 +124,11 @@ namespace _02379_SERTECFARMASL_IOSfera
         }
 
 
-        private async void connect(object sender, EventArgs e)
+        private async void ConnectAsync(object sender, EventArgs e)
         {
-            Console.Write("Array Min and Avg service is now running");
-            int PORT = 9090;
             IPAddress IP = IPAddress.Parse("207.154.200.103");
+            int PORT = 9090;
+
             try
             {
                 if (this._asyncTcpClientService == null)
@@ -140,7 +140,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                         listBox1.Items.Add($"Sent request to ip {IP} port {PORT}");
                         _asyncTcpClientService = new AsyncTcpClientService(IP, PORT, warehouse, workstation);
 
-                        Task<string> authConnetionResponse = _asyncTcpClientService.connet();
+                        Task<string> authConnetionResponse = _asyncTcpClientService.ConnectAsync();
                         this.listBox1.Items.Add("Sent request, waiting for response ...");
                         await authConnetionResponse.ContinueWith(async (_result) =>
                         {

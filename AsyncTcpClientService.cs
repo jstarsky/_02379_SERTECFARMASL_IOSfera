@@ -130,7 +130,7 @@ namespace _02379_SERTECFARMASL_IOSfera
         {
         }
 
-        public async Task<string> connet()
+        public async Task<string> ConnectAsync()
         {
 
             try
@@ -158,7 +158,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                         }
                     }
                     this.client = new TcpClient();
-                    this.client.Connect(this.IP, this.PORT);
+                    await this.client.ConnectAsync(this.IP, this.PORT);
                     this.networkStream = this.client.GetStream();
                     this.writer = new StreamWriter(this.networkStream);
                     this.reader = new StreamReader(this.networkStream);
