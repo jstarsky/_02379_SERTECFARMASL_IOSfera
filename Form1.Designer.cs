@@ -30,8 +30,8 @@ namespace _02379_SERTECFARMASL_IOSfera
 
         private string warehouse = "FarmaciaAlmacen_1";
         private string workstation = "puesto_1";
-        private IPAddress IP = IPAddress.Parse("207.154.200.103");
-        private int PORT = 9090;
+        private IPAddress IP = IPAddress.Parse("213.32.54.247");
+        private int PORT = 50501;
 
 
         #region Windows Form Designer generated code
