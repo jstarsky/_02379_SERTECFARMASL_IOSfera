@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace _02379_SERTECFARMASL_IOSfera
 {
@@ -353,6 +354,7 @@ namespace _02379_SERTECFARMASL_IOSfera
                                     eRecepie = this._eRecepie
                                 };
                                 await this.writer.WriteLineAsync(JsonConvert.SerializeObject(_response_json));
+                                //[DllImport("CCFCAPI.dll")] static extern short CCFCIdentificacioUsuari(UInt32 beepType);
                                 break;
                             }
                             catch (Exception exception)
